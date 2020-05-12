@@ -9,6 +9,7 @@ from torchvision import transforms
 
 from model import mobilenet
 
+from tqdm import tqdm
 
 # num_classes = 2
 # device = torch.device('cuda:2')
@@ -66,5 +67,17 @@ def cam(class_name, image_path, pth, device=torch.device('cuda:2'), num_classes=
     plt.close()
 
 
+def cam_test():
+    root_path = '/mnt/tmp/feng/kuozhankuang/fold_1/test'
+    mode = 'ng'
+    test_path = f'{root_path}/{mode}'
+    bar = tqdm(os.listdir(test_path))
+    for file in bar:
+        bar.set_description(file)
+        image_path = f'{test_path}/{file}'
+        cam('ng', image_path, './pth/mobilenet.pth', output_dir='./test/')
+
+
 if __name__ == '__main__':
-    cam('ng', './examples/demo.jpg', './pth/mobilenet.pth')
+    # cam('ng', './examples/demo.jpg', './pth/mobilenet.pth')
+    cam_test()
