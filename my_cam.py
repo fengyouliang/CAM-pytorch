@@ -56,18 +56,34 @@ def cam(class_name, image_path, pth, device=torch.device('cuda:2'), num_classes=
 
     img = cv.imread(image_path)
     img_rgb = cv.cvtColor(img, cv.COLOR_BGR2RGB)
+    plt.figure()
+    plt.subplot(2, 1, 1)
     plt.imshow(img_rgb)
+    plt.axis('off')
     cam_img = cam
     plt.imshow(cam_img, cmap='jet', alpha=0.3)  # 显示activation map
-    plt.title('pred cls: NG')  # 打印类别信息
+    plt.subplot(2, 1, 2)
+    plt.imshow(img_rgb)
     plt.axis('off')
+    plt.title(f'class: {class_name}')  # 打印类别信息
     output_path = os.path.join(output_dir, os.path.basename(image_path))
     output_path = output_path.replace('jpg', 'png')  # savefig不支持jpg，要转为png
     plt.savefig(output_path)
     plt.close()
 
+    # plt.axis('off')
+    # plt.gcf().set_size_inches(W / 100, H / 100)
+    # plt.gca().xaxis.set_major_locator(plt.NullLocator())
+    # plt.gca().yaxis.set_major_locator(plt.NullLocator())
+    # plt.subplots_adjust(top=1, bottom=0, right=1, left=0, hspace=0, wspace=0)
+    # plt.margins(0, 0)
+    # output_path = os.path.join(output_dir, os.path.basename(image_path))
+    # output_path = output_path.replace('jpg', 'png')  # savefig不支持jpg，要转为png
+    # plt.savefig(output_path)
+
 
 def cam_test():
+    pth = '/home/youliang/code/binary/best_FNR_model/31_acc_0.9443_mAP_0.9620500000000001_FNR0.5503.pth'
     root_path = '/mnt/tmp/feng/kuozhankuang/fold_1/test'
     mode = 'ng'
     test_path = f'{root_path}/{mode}'
@@ -75,7 +91,7 @@ def cam_test():
     for file in bar:
         bar.set_description(file)
         image_path = f'{test_path}/{file}'
-        cam('ng', image_path, './pth/mobilenet.pth', output_dir='./test/')
+        cam('ng', image_path, pth, output_dir=f'./CAM/test/{mode}')
 
 
 if __name__ == '__main__':
